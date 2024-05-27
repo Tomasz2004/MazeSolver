@@ -19,7 +19,7 @@ public class Okno extends JFrame implements ActionListener {
 
     Okno() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1000,1000);
+        this.setSize(1000, 1000);
         this.setLayout(new BorderLayout());
 
         menubar = new JMenuBar();
@@ -51,8 +51,6 @@ public class Okno extends JFrame implements ActionListener {
 
         rysowaniePanel = new Rysowanie();
         scrollPane = new JScrollPane(rysowaniePanel);
-        scrollPane.setPreferredSize(new Dimension(800,800));
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50)); //margines
         this.add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();

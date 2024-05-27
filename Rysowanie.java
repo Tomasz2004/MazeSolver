@@ -31,32 +31,21 @@ public class Rysowanie extends JPanel {
             bufferedReader.close();
             w = maze.size();
             k = maze.get(0).size();
-            if (800 / k >= 1) {
-                komorkax = 800/k;
-                if (800/w >= 1) {
-                    komorkay = 800/w;
-                }
-                else {
-                    w=1;
-                }
+            if (800 / k >= 1){
+                komorkax = 800/ k;
+                komorkay = 800 / w;
             }
             else {
                 komorkax = 1;
-                if (800/w >= 1) {
-                    komorkay = 800/w;
-                }
-                else {
-                    w=1;
-                }
+                komorkay = 1;
             }
-
-            setSize(k*komorkax, w*komorkay);
+            setPreferredSize(new Dimension(k * komorkax, w * komorkay)); // Dynamiczne ustawienie preferowanego rozmiaru
+            revalidate(); // Aktualizacja panelu
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        revalidate(); // Aktualizacja panelu
         repaint();
     }
 
