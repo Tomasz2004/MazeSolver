@@ -1,7 +1,10 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class Okno extends JFrame implements ActionListener {
 
@@ -15,6 +18,7 @@ public class Okno extends JFrame implements ActionListener {
     JMenuItem wyjdzItem;
     JButton dfs;
     JButton bfs;
+    JButton clear;
     JScrollPane scrollPane;
 
     Okno() {
@@ -57,6 +61,7 @@ public class Okno extends JFrame implements ActionListener {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         dfs = new JButton();
         bfs = new JButton();
+        clear = new JButton();
 
         dfs.addActionListener(this);
         dfs.setText("DFS");
@@ -68,10 +73,17 @@ public class Okno extends JFrame implements ActionListener {
         bfs.setFocusable(false);
         bfs.setVisible(false);
 
+        clear.addActionListener(this);
+        clear.setText("Wyczyść labirynt");
+        clear.setFocusable(false);
+        clear.setVisible(false);
+
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(dfs);
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(bfs);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(clear);
         buttonPanel.add(Box.createHorizontalGlue());
 
         this.add(buttonPanel, BorderLayout.SOUTH);
@@ -91,25 +103,35 @@ public class Okno extends JFrame implements ActionListener {
             int odp = txtchooser.showOpenDialog(null);
             if (odp == JFileChooser.APPROVE_OPTION) {
                 String maze = txtchooser.getSelectedFile().getAbsolutePath();
+                rysowaniePanel.resetSolution(); // Resetowanie przed wczytaniem nowego labiryntu
                 rysowaniePanel.przekazaniepliku(maze);
                 dfs.setVisible(true);
                 bfs.setVisible(true);
+                clear.setVisible(true);
                 scrollPane.revalidate();
                 scrollPane.repaint();
             }
         }
         if (e.getSource() == binItem) {
-            JOptionPane.showMessageDialog(null,"Skąd ty wziąłeś plik binarny?!");
+            JOptionPane.showMessageDialog(null, "Skąd ty wziąłeś plik binarny?!");
         }
         if (e.getSource() == zapiszItem) {
-            JOptionPane.showMessageDialog(null,"Kiedyś będzie się dało zapisywać");
+            JOptionPane.showMessageDialog(null, "Kiedyś będzie się dało zapisywać");
         }
         if (e.getSource() == dfs) {
-            JOptionPane.showMessageDialog(null,"Sam se znajdź ścieżkę");
+            JOptionPane.showMessageDialog(null, "Sam se znajdź ścieżkę");
         }
         if (e.getSource() == bfs) {
-            JOptionPane.showMessageDialog(null,"Nie chcę ci psuć zabawy w szukaniu najkrótszej ścieżki");
+            BFS bfsSolver = new BFS(rysowaniePanel.getMaze());
+            List<Point> path = bfsSolver.solve();
+            rysowaniePanel.setVisited(bfsSolver.getVisited());
+            rysowaniePanel.setSolutionPath(path);
         }
+        if (e.getSource() == clear){
+            rysowaniePanel.clearPath();
+            JOptionPane.showMessageDialog(null, "Wyczyszczono ścieżkę");
+        }
+
         if (e.getSource() == wyjdzItem) {
             System.exit(0);
         }

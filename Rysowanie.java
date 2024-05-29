@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
 public class Rysowanie extends JPanel {
-
     private ArrayList<ArrayList<Character>> maze;
+    private List<Point> solutionPath;
+    private boolean[][] visited;
     private int w; // liczba wierszy
     private int k; // liczba kolumn
     private int komorkax;
@@ -31,26 +33,47 @@ public class Rysowanie extends JPanel {
             bufferedReader.close();
             w = maze.size();
             k = maze.get(0).size();
-            if (800 / k >= 1){
-                komorkax = 800/ k;
-                komorkay = 800 / w;
-            }
-            else {
+            if (256 / k >= 1) {
+                komorkax = 256 / k;
+                komorkay = 256 / w;
+            } else {
                 komorkax = 1;
                 komorkay = 1;
             }
-            setPreferredSize(new Dimension(k * komorkax, w * komorkay)); // Dynamiczne ustawienie preferowanego rozmiaru
+            setPreferredSize(new Dimension(k * komorkax * 3, w * komorkay * 3)); // Dynamiczne ustawienie preferowanego rozmiaru
             revalidate(); // Aktualizacja panelu
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        resetSolution();
+        repaint();
+    }
+
+    public void setSolutionPath(List<Point> path) {
+        this.solutionPath = path;
+        repaint();
+    }
+
+    public void setVisited(boolean[][] visited) {
+        this.visited = visited;
+        repaint();
+    }
+
+    public void resetSolution() {
+        this.solutionPath = null;
+        this.visited = null;
+    }
+
+    public void clearPath() {
+        resetSolution();
         repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if (maze == null) {
             return;
@@ -76,8 +99,30 @@ public class Rysowanie extends JPanel {
                         System.exit(1);
                         break;
                 }
-                g2d.fillRect(kol * komorkax, wiersz * komorkay, komorkax, komorkay);
+                g2d.fillRect(kol * komorkax * 3, wiersz * komorkay * 3, komorkax * 3, komorkay * 3);
             }
         }
+
+        if (visited != null) {
+            g2d.setColor(Color.gray);
+            for (int i = 0; i < visited.length; i++) {
+                for (int j = 0; j < visited[i].length; j++) {
+                    if (visited[i][j]) {
+                        g2d.fillRect(j * komorkax * 3, i * komorkay * 3, komorkax * 3, komorkay * 3);
+                    }
+                }
+            }
+        }
+
+        if (solutionPath != null) {
+            g2d.setColor(Color.YELLOW);
+            for (Point p : solutionPath) {
+                g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
+            }
+        }
+    }
+
+    public ArrayList<ArrayList<Character>> getMaze() {
+        return maze;
     }
 }
