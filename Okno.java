@@ -119,7 +119,10 @@ public class Okno extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Kiedyś będzie się dało zapisywać");
         }
         if (e.getSource() == dfs) {
-            JOptionPane.showMessageDialog(null, "Sam se znajdź ścieżkę");
+            DFS dfsSolver = new DFS(rysowaniePanel.getMaze());
+            List<Point> path = dfsSolver.solve();
+            rysowaniePanel.setVisited(dfsSolver.getVisited());
+            rysowaniePanel.setSolutionPath(path);
         }
         if (e.getSource() == bfs) {
             BFS bfsSolver = new BFS(rysowaniePanel.getMaze());

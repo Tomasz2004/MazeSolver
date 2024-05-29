@@ -1,14 +1,14 @@
 import java.awt.Point;
 import java.util.*;
 
-public class BFS {
+public class DFS {
     private char[][] maze;
     private boolean[][] visited;
     private Point start;
     private Point end;
     private ArrayList<Point> path;
 
-    public BFS(ArrayList<ArrayList<Character>> maze) {
+    public DFS(ArrayList<ArrayList<Character>> maze) {
         int w = maze.size();
         int k = maze.get(0).size();
         this.maze = new char[w][k];
@@ -26,16 +26,16 @@ public class BFS {
     }
 
     public List<Point> solve() {
-        Queue<Point> queue = new LinkedList<>();
+        Stack<Point> stack = new Stack<>();
         HashMap<Point, Point> kroki = new HashMap<>();
-        queue.add(start);
+        stack.push(start);
         visited[start.x][start.y] = true;
 
         int[] dx = {1, -1, 0, 0};
         int[] dy = {0, 0, 1, -1};
 
-        while (!queue.isEmpty()) {
-            Point current = queue.poll();
+        while (!stack.isEmpty()) {
+            Point current = stack.pop();
             if (current.equals(end)) {
                 return reconstructPath(kroki);
             }
@@ -47,7 +47,7 @@ public class BFS {
                 if (isValidMove(newX, newY)) {
                     visited[newX][newY] = true;
                     Point next = new Point(newX, newY);
-                    queue.add(next);
+                    stack.push(next);
                     kroki.put(next, current);
                 }
             }
