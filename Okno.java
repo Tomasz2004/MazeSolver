@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.List;
 
 public class Okno extends JFrame implements ActionListener {
@@ -113,7 +114,28 @@ public class Okno extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == binItem) {
-            JOptionPane.showMessageDialog(null, "Skąd ty wziąłeś plik binarny?!");
+            JFileChooser binchooser = new JFileChooser();
+
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".bin", "bin");
+            binchooser.setFileFilter(filter);
+
+            int odp = binchooser.showOpenDialog(null);
+            if (odp == JFileChooser.APPROVE_OPTION) {
+                String binPath = binchooser.getSelectedFile().getAbsolutePath();
+                String txtPath = "maze_decoded.txt";
+                try {
+                    BinInput.binToText(binPath, txtPath);
+                    rysowaniePanel.resetSolution();
+                    rysowaniePanel.przekazaniepliku(txtPath);
+                    dfs.setVisible(true);
+                    bfs.setVisible(true);
+                    clear.setVisible(true);
+                    scrollPane.revalidate();
+                    scrollPane.repaint();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
         if (e.getSource() == zapiszItem) {
             JOptionPane.showMessageDialog(null, "Kiedyś będzie się dało zapisywać");
