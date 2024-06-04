@@ -34,7 +34,7 @@ public class Okno extends JFrame implements ActionListener {
 
         txtItem = new JMenuItem("Wczytaj z .txt");
         binItem = new JMenuItem("Wczytaj z .bin");
-        zapiszItem = new JMenuItem("Zapisz rozwiązanie");
+        zapiszItem = new JMenuItem("Zapisz labirynt");
         wyjdzItem = new JMenuItem("Wyjdź");
 
         txtItem.addActionListener(this);
@@ -51,9 +51,11 @@ public class Okno extends JFrame implements ActionListener {
 
         labiryntMenu.add(txtItem);
         labiryntMenu.add(binItem);
+        labiryntMenu.add(zapiszItem);
         labiryntMenu.add(wyjdzItem);
         menubar.add(labiryntMenu);
         this.setJMenuBar(menubar);
+        zapiszItem.setVisible(false);
 
         rysowaniePanel = new Rysowanie();
         scrollPane = new JScrollPane(rysowaniePanel);
@@ -114,6 +116,7 @@ public class Okno extends JFrame implements ActionListener {
                 String maze = txtchooser.getSelectedFile().getAbsolutePath();
                 rysowaniePanel.resetSolution(); // Resetuje rozwiązanie przed wczytaniem nowego labiryntu
                 rysowaniePanel.przekazaniepliku(maze);
+                zapiszItem.setVisible(true);
                 dfs.setVisible(true);
                 animateddfs.setVisible(true);
                 bfs.setVisible(true);
@@ -137,6 +140,7 @@ public class Okno extends JFrame implements ActionListener {
                     BinInput.binToText(binPath, txtPath);
                     rysowaniePanel.resetSolution();
                     rysowaniePanel.przekazaniepliku(txtPath);
+                    zapiszItem.setVisible(true);
                     dfs.setVisible(true);
                     animateddfs.setVisible(true);
                     bfs.setVisible(true);
@@ -149,7 +153,14 @@ public class Okno extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == zapiszItem) {
-            JOptionPane.showMessageDialog(null, "Kiedyś będzie się dało zapisywać");
+            try {
+                String filename = "labirynt.png";
+                Screenshot.saveComponentAsPNG(rysowaniePanel, filename);
+                JOptionPane.showMessageDialog(null, "Labirynt został zapisany do pliku " + filename);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas zapisywania labiryntu.");
+            }
         }
         if (e.getSource() == dfs) {
             rysowaniePanel.clearPath();
