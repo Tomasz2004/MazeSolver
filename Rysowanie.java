@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.SwingWorker;
 
 public class Rysowanie extends JPanel {
     private ArrayList<ArrayList<Character>> maze;
@@ -15,6 +16,9 @@ public class Rysowanie extends JPanel {
     private int k; // liczba kolumn
     private int komorkax;
     private int komorkay;
+    private List<Point> animationPath;
+    private int animationIndex = 0;
+    private volatile boolean isAnimating = false;
 
     public void przekazaniepliku(String plik) {
         maze = new ArrayList<>();
@@ -62,13 +66,51 @@ public class Rysowanie extends JPanel {
     }
 
     public void resetSolution() {
+        stopAnimation();
         this.solutionPath = null;
         this.visited = null;
     }
 
     public void clearPath() {
+        stopAnimation();
         resetSolution();
         repaint();
+    }
+
+    public void stopAnimation() {
+        isAnimating = false;
+    }
+
+    public void animateDFS(List<Point> path) {
+        this.animationPath = path;
+        this.animationIndex = 0;
+        this.isAnimating = true;
+
+        SwingWorker<Void, Point> worker = new SwingWorker<Void, Point>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                for (Point point : animationPath) {
+                    if (!isAnimating) {
+                        break;
+                    }
+                    publish(point);
+                    Thread.sleep(50); // Przerwa między krokami
+                }
+                return null;
+            }
+
+            @Override
+            protected void process(List<Point> chunks) {
+                for (Point point : chunks) {
+                    if (!isAnimating) {
+                        break;
+                    }
+                    animationIndex++;
+                    repaint();
+                }
+            }
+        };
+        worker.execute();
     }
 
     @Override
@@ -117,6 +159,14 @@ public class Rysowanie extends JPanel {
         if (solutionPath != null) {
             g2d.setColor(Color.YELLOW);
             for (Point p : solutionPath) {
+                g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
+            }
+        }
+
+        if (animationPath != null && isAnimating) {
+            g2d.setColor(Color.BLUE);
+            for (int i = 0; i < animationIndex; i++) {
+                Point p = animationPath.get(i);
                 g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
             }
         }

@@ -18,6 +18,7 @@ public class Okno extends JFrame implements ActionListener {
     JMenuItem zapiszItem;
     JMenuItem wyjdzItem;
     JButton dfs;
+    JButton animateddfs;
     JButton bfs;
     JButton clear;
     JScrollPane scrollPane;
@@ -61,6 +62,7 @@ public class Okno extends JFrame implements ActionListener {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         dfs = new JButton();
+        animateddfs = new JButton();
         bfs = new JButton();
         clear = new JButton();
 
@@ -68,6 +70,11 @@ public class Okno extends JFrame implements ActionListener {
         dfs.setText("DFS");
         dfs.setFocusable(false);
         dfs.setVisible(false);
+
+        animateddfs.addActionListener(this);
+        animateddfs.setText("Symulacja");
+        animateddfs.setFocusable(false);
+        animateddfs.setVisible(false);
 
         bfs.addActionListener(this);
         bfs.setText("BFS - najkrótsza ścieżka");
@@ -82,6 +89,8 @@ public class Okno extends JFrame implements ActionListener {
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(dfs);
         buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(animateddfs);
+        buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(bfs);
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(clear);
@@ -92,10 +101,9 @@ public class Okno extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
-
         if (e.getSource() == txtItem) {
+            rysowaniePanel.clearPath(); // Przerywa animację i czyści ścieżkę animowaną
             JFileChooser txtchooser = new JFileChooser();
 
             FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
@@ -104,9 +112,10 @@ public class Okno extends JFrame implements ActionListener {
             int odp = txtchooser.showOpenDialog(null);
             if (odp == JFileChooser.APPROVE_OPTION) {
                 String maze = txtchooser.getSelectedFile().getAbsolutePath();
-                rysowaniePanel.resetSolution(); // Resetowanie przed wczytaniem nowego labiryntu
+                rysowaniePanel.resetSolution(); // Resetuje rozwiązanie przed wczytaniem nowego labiryntu
                 rysowaniePanel.przekazaniepliku(maze);
                 dfs.setVisible(true);
+                animateddfs.setVisible(true);
                 bfs.setVisible(true);
                 clear.setVisible(true);
                 scrollPane.revalidate();
@@ -114,6 +123,7 @@ public class Okno extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == binItem) {
+            rysowaniePanel.clearPath(); // Przerywa animację i czyści ścieżkę animowaną
             JFileChooser binchooser = new JFileChooser();
 
             FileNameExtensionFilter filter = new FileNameExtensionFilter(".bin", "bin");
@@ -128,6 +138,7 @@ public class Okno extends JFrame implements ActionListener {
                     rysowaniePanel.resetSolution();
                     rysowaniePanel.przekazaniepliku(txtPath);
                     dfs.setVisible(true);
+                    animateddfs.setVisible(true);
                     bfs.setVisible(true);
                     clear.setVisible(true);
                     scrollPane.revalidate();
@@ -141,12 +152,21 @@ public class Okno extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Kiedyś będzie się dało zapisywać");
         }
         if (e.getSource() == dfs) {
+            rysowaniePanel.clearPath();
             DFS dfsSolver = new DFS(rysowaniePanel.getMaze());
             List<Point> path = dfsSolver.solve();
             rysowaniePanel.setVisited(dfsSolver.getVisited());
             rysowaniePanel.setSolutionPath(path);
         }
+        if (e.getSource() == animateddfs) {
+            rysowaniePanel.clearPath(); // Przerywa animację i czyści ścieżkę animowaną
+            DFS dfsSolver = new DFS(rysowaniePanel.getMaze());
+            List<Point> path = dfsSolver.solve();
+            rysowaniePanel.setVisited(dfsSolver.getVisited());
+            rysowaniePanel.animateDFS(path);
+        }
         if (e.getSource() == bfs) {
+            rysowaniePanel.clearPath();
             BFS bfsSolver = new BFS(rysowaniePanel.getMaze());
             List<Point> path = bfsSolver.solve();
             rysowaniePanel.setVisited(bfsSolver.getVisited());
