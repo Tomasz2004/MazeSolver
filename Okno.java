@@ -10,6 +10,7 @@ import java.util.List;
 public class Okno extends JFrame implements ActionListener {
 
     private Rysowanie rysowaniePanel;
+    private NewPK newPK;
 
     JMenuBar menubar;
     JMenu labiryntMenu;
@@ -17,13 +18,14 @@ public class Okno extends JFrame implements ActionListener {
     JMenuItem binItem;
     JMenuItem zapiszItem;
     JMenuItem wyjdzItem;
+    JButton startend;
     JButton dfs;
     JButton animateddfs;
     JButton bfs;
     JButton clear;
     JScrollPane scrollPane;
 
-    Okno() {
+    public Okno() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1000, 1000);
         this.setLayout(new BorderLayout());
@@ -63,10 +65,16 @@ public class Okno extends JFrame implements ActionListener {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        startend = new JButton();
         dfs = new JButton();
         animateddfs = new JButton();
         bfs = new JButton();
         clear = new JButton();
+
+        startend.addActionListener(this);
+        startend.setText("Nowy punkt startowy i końcowy");
+        startend.setFocusable(false);
+        startend.setVisible(false);
 
         dfs.addActionListener(this);
         dfs.setText("DFS");
@@ -89,6 +97,8 @@ public class Okno extends JFrame implements ActionListener {
         clear.setVisible(false);
 
         buttonPanel.add(Box.createHorizontalGlue());
+        buttonPanel.add(startend);
+        buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(dfs);
         buttonPanel.add(Box.createHorizontalStrut(20));
         buttonPanel.add(animateddfs);
@@ -101,6 +111,8 @@ public class Okno extends JFrame implements ActionListener {
         this.add(buttonPanel, BorderLayout.SOUTH);
 
         this.setVisible(true);
+
+        newPK = new NewPK(rysowaniePanel);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -117,6 +129,7 @@ public class Okno extends JFrame implements ActionListener {
                 rysowaniePanel.resetSolution(); // Resetuje rozwiązanie przed wczytaniem nowego labiryntu
                 rysowaniePanel.przekazaniepliku(maze);
                 zapiszItem.setVisible(true);
+                startend.setVisible(true);
                 dfs.setVisible(true);
                 animateddfs.setVisible(true);
                 bfs.setVisible(true);
@@ -141,6 +154,7 @@ public class Okno extends JFrame implements ActionListener {
                     rysowaniePanel.resetSolution();
                     rysowaniePanel.przekazaniepliku(txtPath);
                     zapiszItem.setVisible(true);
+                    startend.setVisible(true);
                     dfs.setVisible(true);
                     animateddfs.setVisible(true);
                     bfs.setVisible(true);
@@ -161,6 +175,9 @@ public class Okno extends JFrame implements ActionListener {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas zapisywania labiryntu.");
             }
+        }
+        if (e.getSource() == startend) {
+            newPK.startSelection();
         }
         if (e.getSource() == dfs) {
             rysowaniePanel.clearPath();

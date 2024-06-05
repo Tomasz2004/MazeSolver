@@ -114,7 +114,7 @@ public class Rysowanie extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if (maze == null) {
@@ -170,6 +170,14 @@ public class Rysowanie extends JPanel {
                 g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
             }
         }
+    }
+
+    public int getKomorkax() {
+        return komorkax;
+    }
+
+    public int getKomorkay() {
+        return komorkay;
     }
 
     public ArrayList<ArrayList<Character>> getMaze() {
