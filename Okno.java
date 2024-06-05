@@ -184,8 +184,8 @@ public class Okno extends JFrame implements ActionListener {
         }
         if (e.getSource() == dfs) {
             rysowaniePanel.clearPath();
-            DFS dfsSolver = new DFS(rysowaniePanel.getMazeDFS());
-            List<Point> path = dfsSolver.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
+            DFS dfsSolver = new DFS(rysowaniePanel.getMaze());
+            List<Point> path = dfsSolver.solve();
             rysowaniePanel.setVisited(dfsSolver.getVisited());
             rysowaniePanel.setSolutionPath(path);
         }
@@ -194,13 +194,14 @@ public class Okno extends JFrame implements ActionListener {
             rysowaniePanel.clearPath();
             List<Point> steps = dfsanimated.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
             rysowaniePanel.animateDFS(steps);
+
             Timer timer = new Timer(100, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (rysowaniePanel.getCzyKoniec() == 1) {
-                        ((Timer) e.getSource()).stop();
-                        DFS dfsSolverPom = new DFS(rysowaniePanel.getMazeDFS());
-                        List<Point> path = dfsSolverPom.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
+                        ((Timer) e.getSource()).stop(); // Zatrzymaj timer
+                        DFS dfsSolver = new DFS(rysowaniePanel.getMaze());
+                        List<Point> path = dfsSolver.solve();
                         rysowaniePanel.setSolutionPath(path);
                     }
                 }
