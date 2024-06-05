@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.SwingWorker;
 
@@ -180,7 +181,43 @@ public class Rysowanie extends JPanel {
         return komorkay;
     }
 
+    public int getStartX() {
+        for (int i = 0; i < maze.size(); i++) {
+            for (int j = 0; j < maze.get(i).size(); j++) {
+                if (maze.get(i).get(j) == 'P') {
+                    return i; // Zwróć współrzędną X punktu startowego
+                }
+            }
+        }
+        return -1; // Jeśli punkt startowy nie został znaleziony, zwróć -1
+    }
+
+    public int getStartY() {
+        for (int i = 0; i < maze.size(); i++) {
+            for (int j = 0; j < maze.get(i).size(); j++) {
+                if (maze.get(i).get(j) == 'P') {
+                    return j; // Zwróć współrzędną Y punktu startowego
+                }
+            }
+        }
+        return -1; // Jeśli punkt startowy nie został znaleziony, zwróć -1
+    }
+
+
     public ArrayList<ArrayList<Character>> getMaze() {
         return maze;
     }
+
+    public char[][] getMazeDFS() {
+        char[][] mazeArray = new char[maze.size()][];
+        for (int i = 0; i < maze.size(); i++) {
+            ArrayList<Character> row = maze.get(i);
+            mazeArray[i] = new char[row.size()];
+            for (int j = 0; j < row.size(); j++) {
+                mazeArray[i][j] = row.get(j);
+            }
+        }
+        return mazeArray;
+    }
+
 }
