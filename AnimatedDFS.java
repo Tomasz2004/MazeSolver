@@ -2,15 +2,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class DFS {
+public class AnimatedDFS {
     private char[][] maze;
     private List<Point> steps; // Zmiana na Listę kroków
-    private boolean[][] visited;
 
-    public DFS(char[][] maze) {
+    public AnimatedDFS(char[][] maze) {
         this.maze = maze;
         this.steps = new ArrayList<>();
-        this.visited = new boolean[maze.length][maze[0].length];
     }
 
     public List<Point> solve(int startX, int startY) {
@@ -22,14 +20,12 @@ public class DFS {
         Point currentPoint = new Point(x, y);
         char currentChar = maze[x][y];
         if (currentChar == 'K') {
-            visited[x][y]=true;
             steps.add(currentPoint); // Dodaj punkt końcowy
             return true; // Znaleziono wyjście
         }
         if (currentChar == 'X' || currentChar == '1') {
             return false; // Ściana lub odwiedzone pole
         }
-        visited[x][y]=true;
         maze[x][y] = '1'; // Oznacz pole jako odwiedzone
         steps.add(currentPoint); // Dodaj aktualny punkt do listy kroków
 
@@ -44,15 +40,10 @@ public class DFS {
                 }
             }
         }
-        steps.remove(currentPoint); // Usuń punkt, jeśli nie prowadzi do wyjścia
         return false; // Brak wyjścia z labiryntu
     }
 
     private boolean isValid(int x, int y) {
-        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length && maze[x][y] != 'X';
-    }
-
-    public boolean[][] getVisited() {
-        return visited;
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length;
     }
 }

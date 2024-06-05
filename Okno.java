@@ -6,13 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class Okno extends JFrame implements ActionListener {
 
     private Rysowanie rysowaniePanel;
     private NewPK newPK;
-    private DFS dfsSolver;
+    private AnimatedDFS dfsanimated;
 
     JMenuBar menubar;
     JMenu labiryntMenu;
@@ -180,21 +179,33 @@ public class Okno extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == startend) {
-            System.out.println("siema");
             rysowaniePanel.clearPath();
             newPK.startSelection();
         }
         if (e.getSource() == dfs) {
-            dfsSolver = new DFS(rysowaniePanel.getMazeDFS());
             rysowaniePanel.clearPath();
-            List <Point> steps = dfsSolver.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
-            rysowaniePanel.setSolutionPath(steps);
+            DFS dfsSolver = new DFS(rysowaniePanel.getMazeDFS());
+            List<Point> path = dfsSolver.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
+            rysowaniePanel.setVisited(dfsSolver.getVisited());
+            rysowaniePanel.setSolutionPath(path);
         }
         if (e.getSource() == animateddfs) {
-            dfsSolver = new DFS(rysowaniePanel.getMazeDFS());
+            dfsanimated = new AnimatedDFS(rysowaniePanel.getMazeDFS());
             rysowaniePanel.clearPath();
-            List<Point> steps = dfsSolver.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
+            List<Point> steps = dfsanimated.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
             rysowaniePanel.animateDFS(steps);
+            Timer timer = new Timer(100, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (rysowaniePanel.getCzyKoniec() == 1) {
+                        ((Timer) e.getSource()).stop();
+                        DFS dfsSolverPom = new DFS(rysowaniePanel.getMazeDFS());
+                        List<Point> path = dfsSolverPom.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
+                        rysowaniePanel.setSolutionPath(path);
+                    }
+                }
+            });
+            timer.start();
         }
         if (e.getSource() == bfs) {
             rysowaniePanel.clearPath();

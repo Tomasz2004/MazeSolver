@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.SwingWorker;
 
@@ -20,6 +19,8 @@ public class Rysowanie extends JPanel {
     private List<Point> animationPath;
     private int animationIndex = 0;
     private volatile boolean isAnimating = false;
+    private int speed = 100;
+    public int czyKoniec = 0;
 
     public void przekazaniepliku(String plik) {
         maze = new ArrayList<>();
@@ -82,10 +83,31 @@ public class Rysowanie extends JPanel {
         isAnimating = false;
     }
 
+    public void setCzyKoniec(int value) {
+        this.czyKoniec = value;
+    }
+
+    public int getCzyKoniec() {
+        return this.czyKoniec;
+    }
+
     public void animateDFS(List<Point> path) {
         this.animationPath = path;
         this.animationIndex = 0;
         this.isAnimating = true;
+        setCzyKoniec(0);
+        if (w*k>100){
+            speed=50;
+            if (w*k>2500){
+                speed=30;
+                if (w*k>10000){
+                    speed=15;
+                    if (w*k>1000000){
+                        speed=5;
+                    }
+                }
+            }
+        }
 
         SwingWorker<Void, Point> worker = new SwingWorker<Void, Point>() {
             @Override
@@ -95,7 +117,7 @@ public class Rysowanie extends JPanel {
                         break;
                     }
                     publish(point);
-                    Thread.sleep(50); // Przerwa między krokami
+                    Thread.sleep(speed); // Przerwa między krokami
                 }
                 return null;
             }
@@ -110,6 +132,10 @@ public class Rysowanie extends JPanel {
                     repaint();
                 }
             }
+            @Override
+            protected void done() {
+                setCzyKoniec(1); // Ustawienie zmiennej na 1 po zakończeniu animacji
+            }
         };
         worker.execute();
     }
@@ -122,6 +148,7 @@ public class Rysowanie extends JPanel {
             return;
         }
 
+        // Rysowanie labiryntu
         for (int wiersz = 0; wiersz < w; wiersz++) {
             for (int kol = 0; kol < k; kol++) {
                 char znak = maze.get(wiersz).get(kol);
@@ -146,6 +173,7 @@ public class Rysowanie extends JPanel {
             }
         }
 
+        // Rysowanie odwiedzonych pól
         if (visited != null) {
             g2d.setColor(Color.gray);
             for (int i = 0; i < visited.length; i++) {
@@ -157,17 +185,19 @@ public class Rysowanie extends JPanel {
             }
         }
 
-        if (solutionPath != null) {
-            g2d.setColor(Color.YELLOW);
-            for (Point p : solutionPath) {
-                g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
-            }
-        }
-
+        // Rysowanie animacji DFS
         if (animationPath != null && isAnimating) {
             g2d.setColor(Color.BLUE);
             for (int i = 0; i < animationIndex; i++) {
                 Point p = animationPath.get(i);
+                g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
+            }
+        }
+
+        // Rysowanie ścieżki rozwiązania
+        if (solutionPath != null) {
+            g2d.setColor(Color.YELLOW);
+            for (Point p : solutionPath) {
                 g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
             }
         }
@@ -219,5 +249,4 @@ public class Rysowanie extends JPanel {
         }
         return mazeArray;
     }
-
 }
