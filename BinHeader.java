@@ -2,7 +2,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class BinHeader {
-    private int fileId;
+    private int id;
     private int escape;
     private short columns;
     private short lines;
@@ -10,50 +10,63 @@ public class BinHeader {
     private short entryY;
     private short exitX;
     private short exitY;
-    private int reserved1;
-    private int reserved2;
-    private int reserved3;
+    private int reservedOne;
+    private int reservedTwo;
+    private int reservedThree;
     private int counter;
     private int solutionOffset;
     private int separator;
     private int wall;
     private int path;
 
-    public static BinHeader readFrom(DataInputStream in) throws IOException {
-        BinHeader header = new BinHeader();
-        header.fileId = Integer.reverseBytes(in.readInt());
-        header.escape = in.read();
-        header.columns = Short.reverseBytes(in.readShort());
-        header.lines = Short.reverseBytes(in.readShort());
-        header.entryX = Short.reverseBytes(in.readShort());
-        header.entryY = Short.reverseBytes(in.readShort());
-        header.exitX = Short.reverseBytes(in.readShort());
-        header.exitY = Short.reverseBytes(in.readShort());
-        header.reserved1 = Integer.reverseBytes(in.readInt());
-        header.reserved2 = Integer.reverseBytes(in.readInt());
-        header.reserved3 = Integer.reverseBytes(in.readInt());
-        header.counter = Integer.reverseBytes(in.readInt());
-        header.solutionOffset = Integer.reverseBytes(in.readInt());
-        header.separator = in.read();
-        header.wall = in.read();
-        header.path = in.read();
-        return header;
+    public BinHeader(DataInputStream in) throws IOException {
+        this.id = Integer.reverseBytes(in.readInt());
+        this.escape = in.read();
+        this.columns = Short.reverseBytes(in.readShort());
+        this.lines = Short.reverseBytes(in.readShort());
+        this.entryX = Short.reverseBytes(in.readShort());
+        this.entryY = Short.reverseBytes(in.readShort());
+        this.exitX = Short.reverseBytes(in.readShort());
+        this.exitY = Short.reverseBytes(in.readShort());
+        this.reservedOne = Integer.reverseBytes(in.readInt());
+        this.reservedTwo = Integer.reverseBytes(in.readInt());
+        this.reservedThree = Integer.reverseBytes(in.readInt());
+        this.counter = Integer.reverseBytes(in.readInt());
+        this.solutionOffset = Integer.reverseBytes(in.readInt());
+        this.separator = in.read();
+        this.wall = in.read();
+        this.path = in.read();
     }
 
-    public int getColumns() {
-        return columns; }
-    public int getLines() {
-        return lines; }
+    public short getColumns() {
+        return columns;
+    }
+
+    public short getLines() {
+        return lines;
+    }
+
     public short getEntryX() {
-        return entryX; }
+        return entryX;
+    }
+
     public short getEntryY() {
-        return entryY; }
+        return entryY;
+    }
+
     public short getExitX() {
-        return exitX; }
+        return exitX;
+    }
+
     public short getExitY() {
-        return exitY; }
+        return exitY;
+    }
+
     public int getWall() {
-        return wall; }
+        return wall;
+    }
+
     public int getPath() {
-        return path; }
+        return path;
+    }
 }

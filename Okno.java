@@ -141,7 +141,7 @@ public class Okno extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == binItem) {
-            rysowaniePanel.clearPath(); // Przerywa animację i czyści ścieżkę animowaną
+            rysowaniePanel.clearPath();
             JFileChooser binchooser = new JFileChooser();
 
             FileNameExtensionFilter filter = new FileNameExtensionFilter(".bin", "bin");
@@ -195,6 +195,7 @@ public class Okno extends JFrame implements ActionListener {
             List<Point> steps = dfsanimated.solve(rysowaniePanel.getStartX(), rysowaniePanel.getStartY());
             rysowaniePanel.animateDFS(steps);
 
+            //Sprawdzanie co 100ms czy animacja się zakończyła
             Timer timer = new Timer(100, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

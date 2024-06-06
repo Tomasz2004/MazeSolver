@@ -3,43 +3,34 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class BinKonwerter {
-    public static void ToText(DataInputStream in, FileWriter out, BinHeader header) throws IOException {
-        int columns = header.getColumns();
-        int lines = header.getLines();
-        short entryX = header.getEntryX();
-        short entryY = header.getEntryY();
-        short exitX = header.getExitX();
-        short exitY = header.getExitY();
-        int wall = header.getWall();
-        int path = header.getPath();
-
-        for (int i = 0; i < lines; i++) {
-            if (i > 0) {
-                out.write('\n');
-            }
-            for (int j = 0; j < columns; j++) {
+    public static void ToTxt(DataInputStream in, FileWriter out, BinHeader header) throws IOException {
+        for(int i = 0; i < header.getLines(); i++) {
+            if(i != 0) out.write('\n');
+            for(int j = 0; j < header.getColumns(); j++) {
                 char znak;
-                int sep; //słowa kodujące
+                int sep;
                 int value;
                 int count;
+                int ile;
 
-                sep = in.read(); //separator
-                value = in.read(); //value
+                sep = in.read();
+                value = in.read();
 
-                if (value == wall) {
+                if(value == header.getWall()) {
                     znak = 'X';
-                } else if (value == path) {
+                } else if(value == header.getPath()) {
                     znak = ' ';
                 } else {
                     znak = '?';
                 }
 
-                count = in.read() + 1;
+                count = in.read();
+                ile = count + 1;
 
-                for (int ile = 0; ile < count; ile++) {
-                    if (i == entryY - 1 && j == entryX - 1) {
+                for(int ilepom = 0; ilepom < ile; ilepom++) {
+                    if(i == header.getEntryY() - 1 && j == header.getEntryX() - 1) {
                         out.write('P');
-                    } else if (i == exitY - 1 && j == exitX - 1) {
+                    } else if(i == header.getExitY() - 1 && j == header.getExitX() - 1) {
                         out.write('K');
                     } else {
                         out.write(znak);
