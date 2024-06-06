@@ -9,7 +9,7 @@ public class BinInput {
              FileWriter out = new FileWriter(txtFilePath)) {
 
             BinHeader header = new BinHeader(in);
-            BinKonwerter.ToTxt(in, out, header);
+            BinKonwerter.toTxt(in, out, header);
         }
     }
 }
