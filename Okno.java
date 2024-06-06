@@ -128,7 +128,6 @@ public class Okno extends JFrame implements ActionListener {
             int odp = txtchooser.showOpenDialog(null);
             if (odp == JFileChooser.APPROVE_OPTION) {
                 String maze = txtchooser.getSelectedFile().getAbsolutePath();
-                rysowaniePanel.resetSolution(); // Resetuje rozwiązanie przed wczytaniem nowego labiryntu
                 rysowaniePanel.przekazaniepliku(maze);
                 zapiszItem.setVisible(true);
                 startend.setVisible(true);
@@ -153,7 +152,6 @@ public class Okno extends JFrame implements ActionListener {
                 String txtPath = "maze_decoded.txt";
                 try {
                     BinInput.binToText(binPath, txtPath);
-                    rysowaniePanel.resetSolution();
                     rysowaniePanel.przekazaniepliku(txtPath);
                     zapiszItem.setVisible(true);
                     startend.setVisible(true);

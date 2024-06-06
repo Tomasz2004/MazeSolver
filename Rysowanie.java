@@ -68,7 +68,6 @@ public class Rysowanie extends JPanel {
     }
 
     public void resetSolution() {
-        stopAnimation();
         this.solutionPath = null;
         this.visited = null;
     }
@@ -116,14 +115,14 @@ public class Rysowanie extends JPanel {
                     if (!isAnimating) {
                         break;
                     }
-                    publish(point);
+                    publish(point); //Przekaż punkt do metody process
                     Thread.sleep(speed); // Przerwa między krokami
                 }
                 return null;
             }
 
             @Override
-            protected void process(List<Point> chunks) {
+            protected void process(List<Point> chunks) {    //chunks to liczba punktów opublikowanych przez publish(point)
                 for (Point point : chunks) {
                     if (!isAnimating) {
                         break;

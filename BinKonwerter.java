@@ -30,7 +30,7 @@ public class BinKonwerter {
                 j--;
                 for(int ilepom = 0; ilepom < ile; ilepom++) {
                     j++;
-                    if(j == header.getColumns()) {              //Przeniesienie się do następnego wiersza w przypadku dojścia do ostatniego elementu wiersza
+                    if(j == header.getColumns()) {      //Przeniesienie się do następnego wiersza w przypadku dojścia do ostatniego elementu wiersza
                         j = 0;
                         i++;
                     }

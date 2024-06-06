@@ -8,8 +8,8 @@ public class BinInput {
         try (DataInputStream in = new DataInputStream(new FileInputStream(binaryFilePath));
              FileWriter out = new FileWriter(txtFilePath)) {
 
-            BinHeader header = new BinHeader(in);
-            BinKonwerter.toTxt(in, out, header);
+            BinHeader header = new BinHeader(in); //Odczytanie pliku binarnego
+            BinKonwerter.toTxt(in, out, header); //Konwersja pliku binarnego na txt
         }
     }
 }

@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -35,8 +36,8 @@ public class AnimatedDFS {
             int newX = x + dir[0];
             int newY = y + dir[1];
             if (isValid(newX, newY) && maze[newX][newY] != '1') {
-                if (dfs(newX, newY)) {
-                    return true; // Rekurencyjnie kontynuuj przeszukiwanie
+                if (dfs(newX, newY)) { // Rekurencyjne przeszukiwanie
+                    return true;
                 }
             }
         }
@@ -44,6 +45,6 @@ public class AnimatedDFS {
     }
 
     private boolean isValid(int x, int y) {
-        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length;
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length; //Sprawdź czy współrzędne są poprawne
     }
 }

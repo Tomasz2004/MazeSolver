@@ -20,7 +20,7 @@ public class BinHeader {
     private int path;
 
     public BinHeader(DataInputStream in) throws IOException {
-        this.id = Integer.reverseBytes(in.readInt());
+        this.id = Integer.reverseBytes(in.readInt());       //czytanie pliku binarnego
         this.escape = in.read();
         this.columns = Short.reverseBytes(in.readShort());
         this.lines = Short.reverseBytes(in.readShort());
@@ -38,6 +38,7 @@ public class BinHeader {
         this.path = in.read();
     }
 
+    //zwracanie wartości odczytanych z pliku binarnego
     public short getColumns() {
         return columns;
     }
