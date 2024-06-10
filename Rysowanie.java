@@ -4,9 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.SwingWorker;
+import java.util.Set;
+
 
 public class Rysowanie extends JPanel {
     private ArrayList<ArrayList<Character>> maze;
@@ -17,6 +20,7 @@ public class Rysowanie extends JPanel {
     private int komorkax;
     private int komorkay;
     private List<Point> animationPath;
+    private Set<Point> backtrackedPoints = new HashSet<>();
     private int animationIndex = 0;
     private volatile boolean isAnimating = false;
     private int speed = 100;
@@ -94,15 +98,16 @@ public class Rysowanie extends JPanel {
         this.animationPath = path;
         this.animationIndex = 0;
         this.isAnimating = true;
+        this.backtrackedPoints.clear();
         setCzyKoniec(0);
-        if (w*k>100){
-            speed=50;
-            if (w*k>2500){
-                speed=30;
-                if (w*k>10000){
-                    speed=15;
-                    if (w*k>1000000){
-                        speed=5;
+        if (w * k > 100) {
+            speed = 50;
+            if (w * k > 2500) {
+                speed = 30;
+                if (w * k > 10000) {
+                    speed = 15;
+                    if (w * k > 1000000) {
+                        speed = 5;
                     }
                 }
             }
@@ -111,18 +116,24 @@ public class Rysowanie extends JPanel {
         SwingWorker<Void, Point> worker = new SwingWorker<Void, Point>() {
             @Override
             protected Void doInBackground() throws Exception {
+                Set<Point> visitedPoints = new HashSet<>();
                 for (Point point : animationPath) {
                     if (!isAnimating) {
                         break;
                     }
-                    publish(point); //Przekaż punkt do metody process
+                    if (visitedPoints.contains(point)) {
+                        backtrackedPoints.add(point);
+                    } else {
+                        visitedPoints.add(point);
+                    }
+                    publish(point); // Przekaż punkt do metody process
                     Thread.sleep(speed); // Przerwa między krokami
                 }
                 return null;
             }
 
             @Override
-            protected void process(List<Point> chunks) {    //chunks to liczba punktów opublikowanych przez publish(point)
+            protected void process(List<Point> chunks) {
                 for (Point point : chunks) {
                     if (!isAnimating) {
                         break;
@@ -131,6 +142,7 @@ public class Rysowanie extends JPanel {
                     repaint();
                 }
             }
+
             @Override
             protected void done() {
                 setCzyKoniec(1); // Ustawienie zmiennej na 1 po zakończeniu animacji
@@ -189,6 +201,11 @@ public class Rysowanie extends JPanel {
             g2d.setColor(Color.BLUE);
             for (int i = 0; i < animationIndex; i++) {
                 Point p = animationPath.get(i);
+                if (backtrackedPoints.contains(p)) {
+                    g2d.setColor(Color.WHITE); // Przemaluj pola błędne na biało
+                } else {
+                    g2d.setColor(Color.BLUE);
+                }
                 g2d.fillRect(p.y * komorkax * 3, p.x * komorkay * 3, komorkax * 3, komorkay * 3);
             }
         }

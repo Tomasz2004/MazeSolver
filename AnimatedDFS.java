@@ -1,11 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public class AnimatedDFS {
     private char[][] maze;
-    private List<Point> steps; // Zmiana na Listę kroków
+    private List<Point> steps; // Lista kroków
 
     public AnimatedDFS(char[][] maze) {
         this.maze = maze;
@@ -41,10 +40,11 @@ public class AnimatedDFS {
                 }
             }
         }
+        steps.add(currentPoint); // Dodaj punkt powrotu
         return false; // Brak wyjścia z labiryntu
     }
 
     private boolean isValid(int x, int y) {
-        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length; //Sprawdź czy współrzędne są poprawne
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length; // Sprawdź czy współrzędne są poprawne
     }
 }
