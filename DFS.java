@@ -4,52 +4,64 @@ import java.util.List;
 
 public class DFS {
     private char[][] maze;
-    private List<Point> steps; // Zmiana na Listę kroków
+    private List<Point> solutionPath; // Lista rozwiązania
     private boolean[][] visited;
 
     public DFS(char[][] maze) {
         this.maze = maze;
-        this.steps = new ArrayList<>();
+        this.solutionPath = new ArrayList<>();
         this.visited = new boolean[maze.length][maze[0].length];
     }
 
     public List<Point> solve(int startX, int startY) {
-        dfs(startX, startY);
-        return steps;
-    }
+        Stack<Point> stack = new Stack<>();
+        Map<Point, Point> kroki = new HashMap<>();
 
-    private boolean dfs(int x, int y) {
-        Point currentPoint = new Point(x, y);
-        char currentChar = maze[x][y];
-        if (currentChar == 'K') {
-            visited[x][y]=true;
-            steps.add(currentPoint); // Dodaj punkt końcowy
-            return true; // Znaleziono wyjście
-        }
-        if (currentChar == 'X' || currentChar == '1') {
-            return false; // Ściana lub odwiedzone pole
-        }
-        visited[x][y]=true;
-        maze[x][y] = '1'; // Oznacz pole jako odwiedzone
-        steps.add(currentPoint); // Dodaj aktualny punkt do listy kroków
+        stack.push(new Point(startX, startY));
 
-        // Sprawdź sąsiednie pola
-        int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; // Góra, Prawo, Dół, Lewo
-        for (int[] dir : directions) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-            if (isValid(newX, newY) && maze[newX][newY] != '1') {
-                if (dfs(newX, newY)) {
-                    return true; // Rekurencyjnie kontynuuj przeszukiwanie
+        while (!stack.isEmpty()) {
+            Point current = stack.pop();
+            int x = current.x;
+            int y = current.y;
+
+            if (maze[x][y] == 'K') {
+                return PathOnList(kroki, new Point(startX, startY), current);
+            }
+
+            if (!visited[x][y]) {
+                visited[x][y] = true;
+
+                int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+                for (int[] dir : directions) {
+                    int newX = x + dir[0];
+                    int newY = y + dir[1];
+
+                    if (isValid(newX, newY) && !visited[newX][newY] && maze[newX][newY] != 'X') {
+                        stack.push(new Point(newX, newY));
+                        kroki.put(new Point(newX, newY), current);
+                    }
                 }
             }
         }
-        steps.remove(currentPoint); // Usuń punkt, jeśli nie prowadzi do wyjścia
-        return false; // Brak wyjścia z labiryntu
+
+        return solutionPath; // Jeśli nie znaleziono rozwiązania, zwraca pustą listę
+    }
+
+    private List<Point> PathOnList(Map<Point, Point> kroki, Point start, Point end) {
+        List<Point> path = new ArrayList<>();
+        Point current = end;
+
+        while (!current.equals(start)) {
+            path.add(current);
+            current = kroki.get(current);
+        }
+        path.add(start);
+        Collections.reverse(path); //Odwracamy bo szliśmy od końca
+        return path;
     }
 
     private boolean isValid(int x, int y) {
-        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length && maze[x][y] != 'X';
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length;
     }
 
     public boolean[][] getVisited() {
