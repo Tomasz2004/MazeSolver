@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 public class BFS {
     private char[][] maze;
@@ -52,6 +53,7 @@ public class BFS {
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "Brak rozwiązania dla podanego labiryntu.");
         return Collections.emptyList();
     }
 

@@ -33,7 +33,7 @@ public class Okno extends JFrame implements ActionListener {
 
         menubar = new JMenuBar();
 
-        labiryntMenu = new JMenu("Labirynt");
+        labiryntMenu = new JMenu("Labirynt");       //Pasek menu
 
         txtItem = new JMenuItem("Wczytaj z .txt");
         binItem = new JMenuItem("Wczytaj z .bin");
@@ -45,6 +45,7 @@ public class Okno extends JFrame implements ActionListener {
         zapiszItem.addActionListener(this);
         wyjdzItem.addActionListener(this);
 
+        //SKRÓTY
         labiryntMenu.setMnemonic(KeyEvent.VK_L); // ALT+L dla labiryntMenu
 
         txtItem.setMnemonic(KeyEvent.VK_T); // T dla pliku txt
@@ -52,7 +53,7 @@ public class Okno extends JFrame implements ActionListener {
         zapiszItem.setMnemonic(KeyEvent.VK_S); // S aby zapisać
         wyjdzItem.setMnemonic(KeyEvent.VK_E); // E aby wyjść
 
-        labiryntMenu.add(txtItem);
+        labiryntMenu.add(txtItem);      //Dodanie elementów do przycisku menu
         labiryntMenu.add(binItem);
         labiryntMenu.add(zapiszItem);
         labiryntMenu.add(wyjdzItem);
@@ -60,7 +61,7 @@ public class Okno extends JFrame implements ActionListener {
         this.setJMenuBar(menubar);
         zapiszItem.setVisible(false);
 
-        rysowaniePanel = new Rysowanie();
+        rysowaniePanel = new Rysowanie();               //Panel z labiryntem
         scrollPane = new JScrollPane(rysowaniePanel);
         this.add(scrollPane, BorderLayout.CENTER);
 
@@ -72,6 +73,7 @@ public class Okno extends JFrame implements ActionListener {
         bfs = new JButton();
         clear = new JButton();
 
+        //PRZYCISKI
         startend.addActionListener(this);
         startend.setText("Nowy punkt startowy i końcowy");
         startend.setFocusable(false);

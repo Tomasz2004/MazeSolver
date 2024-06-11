@@ -1,15 +1,14 @@
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class DFS {
     private char[][] maze;
-    private List<Point> solutionPath; // Lista rozwiązania
     private boolean[][] visited;
 
     public DFS(char[][] maze) {
         this.maze = maze;
-        this.solutionPath = new ArrayList<>();
         this.visited = new boolean[maze.length][maze[0].length];
     }
 
@@ -43,8 +42,8 @@ public class DFS {
                 }
             }
         }
-
-        return solutionPath; // Jeśli nie znaleziono rozwiązania, zwraca pustą listę
+        JOptionPane.showMessageDialog(null, "Brak rozwiązania dla podanego labiryntu.");
+        return Collections.emptyList(); // Jeśli nie znaleziono rozwiązania, zwraca pustą listę
     }
 
     private List<Point> PathOnList(Map<Point, Point> kroki, Point start, Point end) {

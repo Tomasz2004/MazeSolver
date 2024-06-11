@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class AnimatedDFS {
     private char[][] maze;
@@ -12,8 +13,11 @@ public class AnimatedDFS {
     }
 
     public List<Point> solve(int startX, int startY) {
-        dfs(startX, startY);
-        return steps;
+        if (dfs(startX, startY)) {
+            return steps;
+        }
+        JOptionPane.showMessageDialog(null, "Brak rozwiązania dla podanego labiryntu.");
+        return Collections.emptyList();
     }
 
     private boolean dfs(int x, int y) {
