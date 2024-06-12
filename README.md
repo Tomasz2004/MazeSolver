@@ -6,4 +6,4 @@ javac Main.java
 
 Uruchomienie:
 
-java -Xss4m Main
+java -Xss30m Main
